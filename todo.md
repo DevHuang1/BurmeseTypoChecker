@@ -21,3 +21,10 @@
 - [x] Add a curated core lexicon and an approved-uncommon-word allowlist.
 - [x] Classify tokens without suppressing structural typo findings.
 - [x] Add dictionary-aware regression tests and run verification.
+
+## Reviewed Domain Lexicons
+
+- [x] Gather vocabulary from authoritative Burmese legal and medical references.
+- [x] Add categorized legal and medical term lists with source metadata.
+- [x] Extend dictionary classification to report the recognized domain.
+- [x] Add legal and medical regression tests and run the full verification suite.

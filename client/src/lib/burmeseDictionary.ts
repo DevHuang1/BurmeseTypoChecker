@@ -4,7 +4,8 @@ import { detectBurmeseSyllableTypos, type BurmeseTypoIssue } from "./burmeseTypo
  * Curated vocabulary is intentionally small and reviewable. It classifies known
  * words but never replaces structural validation or claims full dictionary coverage.
  */
-export type BurmeseWordStatus = "common" | "approved-uncommon" | "unknown" | "structural-error";
+export type BurmeseLexiconDomain = "legal" | "medical";
+export type BurmeseWordStatus = "common" | "approved-uncommon" | "domain-recognized" | "unknown" | "structural-error";
 
 export type BurmeseWordClassification = {
   token: string;
@@ -12,11 +13,13 @@ export type BurmeseWordClassification = {
   index: number;
   length: number;
   status: BurmeseWordStatus;
+  recognizedDomains: BurmeseLexiconDomain[];
   structuralIssues: BurmeseTypoIssue[];
 };
 
 export type BurmeseDictionaryOptions = {
   additionalApprovedWords?: Iterable<string>;
+  includedDomains?: Iterable<BurmeseLexiconDomain>;
 };
 
 export const CURATED_BURMESE_CORE_WORDS = [
@@ -60,10 +63,108 @@ export const CURATED_BURMESE_UNCOMMON_WORDS = [
   "ဂီတစာပေ",
 ] as const;
 
+/**
+ * Reviewed legal terminology. The set is curated for clear category coverage,
+ * not presented as a replacement for a complete legal dictionary.
+ */
+export const CURATED_BURMESE_LEGAL_WORDS = [
+  "ဥပဒေ",
+  "တရားဥပဒေ",
+  "တရားရုံး",
+  "တရားသူကြီး",
+  "ရှေ့နေ",
+  "တရားလို",
+  "တရားခံ",
+  "အမှု",
+  "အမှုတွဲ",
+  "တရားစွဲဆိုမှု",
+  "စွဲချက်",
+  "သက်သေ",
+  "သက်သေခံ",
+  "သက်သေခံပစ္စည်း",
+  "အယူခံ",
+  "အမိန့်",
+  "စီရင်ချက်",
+  "ပြစ်မှု",
+  "ပြစ်ဒဏ်",
+  "အကျဉ်းထောင်",
+  "အာမခံ",
+  "စာချုပ်",
+  "တရားဝင်",
+  "အခွင့်အရေး",
+  "တာဝန်",
+  "ဖွဲ့စည်းပုံအခြေခံဥပဒေ",
+  "ဥပဒေကြမ်း",
+  "နိုင်ငံသား",
+  "ပစ္စည်း",
+  "ပိုင်ဆိုင်မှု",
+  "အမွေဆက်ခံ",
+  "ချုပ်နှောင်",
+  "အာဏာ",
+  "ရာဇဝတ်မှု",
+  "သံသယရှိသူ",
+  "မှတ်တမ်း",
+  "လျှောက်လွှာ",
+  "ခွင့်ပြုချက်",
+  "ပိတ်ပင်မှု",
+  "တရားမျှတမှု",
+] as const;
+
+/**
+ * Reviewed medical terminology spanning clinical roles, care settings, symptoms,
+ * diagnostics, treatment, prevention, and common body systems.
+ */
+export const CURATED_BURMESE_MEDICAL_WORDS = [
+  "ကျန်းမာရေး",
+  "ဆေးရုံ",
+  "ဆရာဝန်",
+  "သူနာပြု",
+  "လူနာ",
+  "ရောဂါ",
+  "ကုသမှု",
+  "ရောဂါလက္ခဏာ",
+  "ရောဂါရှာဖွေခြင်း",
+  "ဆေးဝါး",
+  "ကာကွယ်ဆေး",
+  "ကာကွယ်မှု",
+  "ခွဲစိတ်ကုသမှု",
+  "သွေးပေါင်ချိန်",
+  "ကိုယ်အပူချိန်",
+  "အသက်ရှူ",
+  "အရေးပေါ်",
+  "ပိုးကူးစက်မှု",
+  "ကူးစက်ရောဂါ",
+  "နာကျင်မှု",
+  "ဆေးညွှန်း",
+  "ဆေးမှတ်တမ်း",
+  "ဓာတ်ခွဲခန်း",
+  "ဓာတ်မှန်",
+  "စစ်ဆေးမှု",
+  "ကာယကုထုံး",
+  "အာဟာရ",
+  "အာဟာရချို့တဲ့မှု",
+  "မိခင်",
+  "ကလေး",
+  "ကာကွယ်ဆေးထိုးခြင်း",
+  "နာတာရှည်ရောဂါ",
+  "စိတ်ကျန်းမာရေး",
+  "မျက်စိ",
+  "နှလုံး",
+  "အသည်း",
+  "ကျောက်ကပ်",
+  "အဆုတ်",
+  "သွေးချို",
+  "သွေးအားနည်းရောဂါ",
+] as const;
+
 const myanmarCharacter = /[\u1000-\u109F]/;
 const normalize = (value: string) => value.normalize("NFC");
 const coreWords = new Set(CURATED_BURMESE_CORE_WORDS.map(normalize));
 const uncommonWords = new Set(CURATED_BURMESE_UNCOMMON_WORDS.map(normalize));
+const domainWords: Record<BurmeseLexiconDomain, Set<string>> = {
+  legal: new Set(CURATED_BURMESE_LEGAL_WORDS.map(normalize)),
+  medical: new Set(CURATED_BURMESE_MEDICAL_WORDS.map(normalize)),
+};
 
 function extractBurmeseTokens(value: string) {
   const chars = Array.from(normalize(value));
@@ -93,16 +194,23 @@ function overlaps(leftIndex: number, leftLength: number, rightIndex: number, rig
 export function classifyBurmeseWords(value: string, options: BurmeseDictionaryOptions = {}): BurmeseWordClassification[] {
   const structuralIssues = detectBurmeseSyllableTypos(value);
   const approvedWords = new Set(Array.from(options.additionalApprovedWords ?? [], normalize));
+  const includedDomains = new Set<BurmeseLexiconDomain>(
+    Array.from(options.includedDomains ?? (["legal", "medical"] as BurmeseLexiconDomain[])),
+  );
 
   return extractBurmeseTokens(value).map(({ token, index, length }) => {
     const normalized = normalize(token);
     const tokenIssues = structuralIssues.filter((issue) => overlaps(index, length, issue.index, issue.length));
+    const recognizedDomains = (Object.keys(domainWords) as BurmeseLexiconDomain[]).filter(
+      (domain) => includedDomains.has(domain) && domainWords[domain].has(normalized),
+    );
     let status: BurmeseWordStatus = "unknown";
 
     if (tokenIssues.length > 0) status = "structural-error";
     else if (coreWords.has(normalized)) status = "common";
     else if (uncommonWords.has(normalized) || approvedWords.has(normalized)) status = "approved-uncommon";
+    else if (recognizedDomains.length > 0) status = "domain-recognized";
 
-    return { token, normalized, index, length, status, structuralIssues: tokenIssues };
+    return { token, normalized, index, length, status, recognizedDomains, structuralIssues: tokenIssues };
   });
 }
