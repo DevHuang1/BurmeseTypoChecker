@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Ink & Signal: warm paper, ink navy, and thanaka vermilion; tactile editorial workspace. */
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -43,135 +44,65 @@
 }
 
 :root {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-600);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --radius: 0.65rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.235 0.015 65);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.235 0.015 65);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.235 0.015 65);
-  --secondary: oklch(0.98 0.001 286.375);
-  --secondary-foreground: oklch(0.4 0.015 65);
-  --muted: oklch(0.967 0.001 286.375);
-  --muted-foreground: oklch(0.552 0.016 285.938);
-  --accent: oklch(0.967 0.001 286.375);
-  --accent-foreground: oklch(0.141 0.005 285.823);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(0.92 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.623 0.214 259.815);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.235 0.015 65);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.623 0.214 259.815);
-}
-
-.dark {
-  --primary: var(--color-blue-700);
-  --primary-foreground: var(--color-blue-50);
-  --sidebar-primary: var(--color-blue-500);
-  --sidebar-primary-foreground: var(--color-blue-50);
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.85 0.005 65);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.85 0.005 65);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.85 0.005 65);
-  --secondary: oklch(0.24 0.006 286.033);
-  --secondary-foreground: oklch(0.7 0.005 65);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground:  oklch(0.92 0.005 65);
-  --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.985 0 0);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.488 0.243 264.376);
-  --chart-1: var(--color-blue-300);
-  --chart-2: var(--color-blue-500);
-  --chart-3: var(--color-blue-600);
-  --chart-4: var(--color-blue-700);
-  --chart-5: var(--color-blue-800);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.85 0.005 65);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground:  oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.488 0.243 264.376);
+  --radius: 0.85rem;
+  --background: oklch(0.975 0.018 82);
+  --foreground: oklch(0.24 0.035 254);
+  --card: oklch(0.995 0.008 82);
+  --card-foreground: oklch(0.24 0.035 254);
+  --popover: oklch(0.995 0.008 82);
+  --popover-foreground: oklch(0.24 0.035 254);
+  --primary: oklch(0.36 0.075 252);
+  --primary-foreground: oklch(0.98 0.015 82);
+  --secondary: oklch(0.945 0.024 82);
+  --secondary-foreground: oklch(0.36 0.075 252);
+  --muted: oklch(0.935 0.02 82);
+  --muted-foreground: oklch(0.52 0.045 252);
+  --accent: oklch(0.89 0.05 150);
+  --accent-foreground: oklch(0.27 0.06 153);
+  --destructive: oklch(0.61 0.15 35);
+  --destructive-foreground: oklch(0.98 0.015 82);
+  --border: oklch(0.87 0.025 78);
+  --input: oklch(0.87 0.025 78);
+  --ring: oklch(0.61 0.15 35);
+  --chart-1: oklch(0.61 0.15 35);
+  --chart-2: oklch(0.52 0.09 153);
+  --chart-3: oklch(0.36 0.075 252);
+  --chart-4: oklch(0.77 0.1 77);
+  --chart-5: oklch(0.52 0.045 252);
+  --sidebar: oklch(0.96 0.018 82);
+  --sidebar-foreground: oklch(0.24 0.035 254);
+  --sidebar-primary: oklch(0.36 0.075 252);
+  --sidebar-primary-foreground: oklch(0.98 0.015 82);
+  --sidebar-accent: oklch(0.91 0.04 82);
+  --sidebar-accent-foreground: oklch(0.36 0.075 252);
+  --sidebar-border: oklch(0.87 0.025 78);
+  --sidebar-ring: oklch(0.61 0.15 35);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
+  * { @apply border-border outline-ring/50; }
+  html { background: var(--background); }
   body {
     @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+    background-image: radial-gradient(circle at 12% 10%, rgba(200,90,63,.07), transparent 22rem), radial-gradient(circle at 88% 80%, rgba(107,145,112,.08), transparent 26rem);
   }
-  button:not(:disabled),
-  [role="button"]:not([aria-disabled="true"]),
-  [type="button"]:not(:disabled),
-  [type="submit"]:not(:disabled),
-  [type="reset"]:not(:disabled),
-  a[href],
-  select:not(:disabled),
-  input[type="checkbox"]:not(:disabled),
-  input[type="radio"]:not(:disabled) {
-    @apply cursor-pointer;
-  }
+  button, [role="button"] { @apply cursor-pointer; }
 }
 
 @layer components {
-  /**
-   * Custom container utility that centers content and adds responsive padding.
-   *
-   * This overrides Tailwind's default container behavior to:
-   * - Auto-center content (mx-auto)
-   * - Add responsive horizontal padding
-   * - Set max-width for large screens
-   *
-   * Usage: <div className="container">...</div>
-   *
-   * For custom widths, use max-w-* utilities directly:
-   * <div className="max-w-6xl mx-auto px-4">...</div>
-   */
-  .container {
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem; /* 16px - mobile padding */
-    padding-right: 1rem;
-  }
-
-  .flex {
-    min-height: 0;
-    min-width: 0;
-  }
-
-  @media (min-width: 640px) {
-    .container {
-      padding-left: 1.5rem; /* 24px - tablet padding */
-      padding-right: 1.5rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .container {
-      padding-left: 2rem; /* 32px - desktop padding */
-      padding-right: 2rem;
-      max-width: 1280px; /* Standard content width */
-    }
-  }
+  .container { width: 100%; margin-inline: auto; padding-inline: 1.5rem; }
+  .burmese { font-family: 'Noto Sans Myanmar', sans-serif; }
+  .paper-grain { background-image: linear-gradient(rgba(255,255,255,.32), rgba(255,255,255,.32)), url("/manus-storage/burmese-paper-detail_9d3ae182.png"); background-size: cover; }
+  .rule { background-image: repeating-linear-gradient(to bottom, transparent 0, transparent 31px, rgba(36,53,79,.07) 32px); }
+  .proof-underline { text-decoration-line: underline; text-decoration-style: wavy; text-decoration-color: #c85a3f; text-decoration-thickness: 2px; text-underline-offset: 6px; }
 }
+
+@media (min-width: 1024px) { .container { max-width: 1440px; padding-inline: 2.5rem; } }
+@media (prefers-reduced-motion: no-preference) {
+  .rise-in { animation: rise-in .55s cubic-bezier(.23,1,.32,1) both; }
+  .rise-in-delay-1 { animation-delay: 70ms; }
+  .rise-in-delay-2 { animation-delay: 140ms; }
+  .rise-in-delay-3 { animation-delay: 210ms; }
+}
+@keyframes rise-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
