@@ -14,3 +14,10 @@
 - [x] Add a deterministic Burmese syllable typo-detection rule module.
 - [x] Cover complex stacked consonants, kinzi forms, vowel signs, and invalid orderings.
 - [x] Run type checks and the automated test suite.
+
+## Curated Burmese Dictionary
+
+- [x] Define dictionary outcomes for common, approved-uncommon, and unknown Burmese words.
+- [x] Add a curated core lexicon and an approved-uncommon-word allowlist.
+- [x] Classify tokens without suppressing structural typo findings.
+- [x] Add dictionary-aware regression tests and run verification.

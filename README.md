@@ -23,4 +23,4 @@ The project is built with React, TypeScript, Vite, Tailwind CSS, shadcn/ui primi
 
 ## Current scope
 
-This repository contains the frontend experience and representative review states. Production OCR, Burmese language-model analysis, document persistence, and corrected DOCX/PDF export integrations are intentionally not connected yet.
+This repository contains the frontend experience, representative review states, and a conservative Burmese text-quality layer. The detection layer combines Unicode-structure checks with a small curated lexicon and an approved-uncommon-word allowlist, so structurally valid uncommon terms can be retained for review rather than automatically presented as typos. Production OCR, Burmese language-model analysis, document persistence, and corrected DOCX/PDF export integrations are intentionally not connected yet.
