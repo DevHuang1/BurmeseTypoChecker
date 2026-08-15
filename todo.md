@@ -47,3 +47,10 @@
 - [x] Implement base-term resolution while preserving original spans and structural issues.
 - [x] Add attached legal and medical particle regression tests.
 - [x] Run the full test, type-check, and build verification.
+
+## Instant Scan Results
+
+- [x] Inspect the current scanner layout and interaction state.
+- [x] Add instant below-scanner typo results with page, line, and character locations.
+- [x] Add responsive result-row interactions and correction metadata.
+- [x] Verify the UI, tests, type checks, and production build.
