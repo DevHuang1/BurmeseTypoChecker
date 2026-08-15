@@ -28,3 +28,22 @@
 - [x] Add categorized legal and medical term lists with source metadata.
 - [x] Extend dictionary classification to report the recognized domain.
 - [x] Add legal and medical regression tests and run the full verification suite.
+
+## Reusable Skill
+
+- [x] Initialize the reusable Burmese typo-checker skill package.
+- [x] Write concise workflow instructions and bundled references.
+- [x] Validate the skill package and deliver its SKILL.md.
+
+## Reusable Skill Sample Test
+
+- [x] Define legal and medical sample passages with known domain terms, unknown terms, and structural errors.
+- [x] Run the reusable skill workflow and inspect token classifications.
+- [x] Report pass/fail findings and recommended refinements.
+
+## Affix-Aware Tokenization
+
+- [x] Define conservative supported Burmese particles and postpositions.
+- [x] Implement base-term resolution while preserving original spans and structural issues.
+- [x] Add attached legal and medical particle regression tests.
+- [x] Run the full test, type-check, and build verification.

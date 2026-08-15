@@ -33,6 +33,36 @@ describe("classifyBurmeseWords", () => {
     expect(word).toMatchObject({ index: 6, status: "approved-uncommon" });
   });
 
+  it("resolves a legal base term with an attached subject particle", () => {
+    const [word] = classifyBurmeseWords("တရားရုံးသည်", { includedDomains: ["legal"] });
+    expect(word).toMatchObject({
+      token: "တရားရုံးသည်",
+      baseToken: "တရားရုံး",
+      attachedParticles: ["သည်"],
+      status: "domain-recognized",
+      recognizedDomains: ["legal"],
+      structuralIssues: [],
+    });
+  });
+
+  it("resolves multiple medical terms with attached particles", () => {
+    const words = classifyBurmeseWords("ဆေးရုံတွင် ဆရာဝန်သည် လူနာ၏", { includedDomains: ["medical"] });
+    expect(words.map((word) => word.baseToken)).toEqual(["ဆေးရုံ", "ဆရာဝန်", "လူနာ"]);
+    expect(words.every((word) => word.status === "domain-recognized")).toBe(true);
+    expect(words.map((word) => word.attachedParticles)).toEqual([["တွင်"], ["သည်"], ["၏"]]);
+  });
+
+  it("preserves the whole original span when an attached token has a structural typo", () => {
+    const [word] = classifyBurmeseWords("ဆေးရုံိိတွင်", { includedDomains: ["medical"] });
+    expect(word).toMatchObject({
+      token: "ဆေးရုံိိတွင်",
+      baseToken: "ဆေးရုံိိ",
+      attachedParticles: ["တွင်"],
+      status: "structural-error",
+    });
+    expect(word.structuralIssues.map((issue) => issue.code)).toContain("DUPLICATE_VOWEL_MARK");
+  });
+
   it("recognizes reviewed legal vocabulary and reports its domain", () => {
     const [word] = classifyBurmeseWords("တရားရုံး");
     expect(word).toMatchObject({ status: "domain-recognized", recognizedDomains: ["legal"], structuralIssues: [] });

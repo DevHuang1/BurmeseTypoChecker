@@ -10,6 +10,9 @@ export type BurmeseWordStatus = "common" | "approved-uncommon" | "domain-recogni
 export type BurmeseWordClassification = {
   token: string;
   normalized: string;
+  baseToken: string;
+  normalizedBaseToken: string;
+  attachedParticles: string[];
   index: number;
   length: number;
   status: BurmeseWordStatus;
@@ -159,6 +162,26 @@ export const CURATED_BURMESE_MEDICAL_WORDS = [
 
 const myanmarCharacter = /[\u1000-\u109F]/;
 const normalize = (value: string) => value.normalize("NFC");
+
+/**
+ * Conservative bound particles/postpositions. Keep this list explicit so
+ * suffix stripping cannot silently turn arbitrary text into a dictionary hit.
+ */
+export const BURMESE_ATTACHED_PARTICLES = [
+  "သည်",
+  "၏",
+  "ကို",
+  "က",
+  "မှ",
+  "တွင်",
+  "တွေနှင့်",
+  "နှင့်",
+  "ဖြင့်",
+  "အတွက်",
+  "အပေါ်",
+  "အောက်",
+  "ထံ",
+] as const;
 const coreWords = new Set(CURATED_BURMESE_CORE_WORDS.map(normalize));
 const uncommonWords = new Set(CURATED_BURMESE_UNCOMMON_WORDS.map(normalize));
 const domainWords: Record<BurmeseLexiconDomain, Set<string>> = {
@@ -187,6 +210,26 @@ function overlaps(leftIndex: number, leftLength: number, rightIndex: number, rig
   return leftIndex < rightIndex + rightLength && rightIndex < leftIndex + leftLength;
 }
 
+function resolveAttachedParticles(token: string) {
+  const normalizedToken = normalize(token);
+  const particles = [...BURMESE_ATTACHED_PARTICLES].sort((left, right) => right.length - left.length);
+  const attachedParticles: string[] = [];
+  let baseToken = normalizedToken;
+
+  let changed = true;
+  while (changed) {
+    changed = false;
+    const particle = particles.find((candidate) => baseToken.endsWith(candidate) && baseToken !== candidate);
+    if (particle) {
+      attachedParticles.unshift(particle);
+      baseToken = baseToken.slice(0, -particle.length);
+      changed = true;
+    }
+  }
+
+  return { baseToken, attachedParticles };
+}
+
 /**
  * Classifies Burmese tokens after structural checks. A valid but unknown token is
  * returned as `unknown` for review; it is not automatically labelled a typo.
@@ -200,17 +243,29 @@ export function classifyBurmeseWords(value: string, options: BurmeseDictionaryOp
 
   return extractBurmeseTokens(value).map(({ token, index, length }) => {
     const normalized = normalize(token);
+    const { baseToken, attachedParticles } = resolveAttachedParticles(normalized);
     const tokenIssues = structuralIssues.filter((issue) => overlaps(index, length, issue.index, issue.length));
     const recognizedDomains = (Object.keys(domainWords) as BurmeseLexiconDomain[]).filter(
-      (domain) => includedDomains.has(domain) && domainWords[domain].has(normalized),
+      (domain) => includedDomains.has(domain) && domainWords[domain].has(baseToken),
     );
     let status: BurmeseWordStatus = "unknown";
 
     if (tokenIssues.length > 0) status = "structural-error";
-    else if (coreWords.has(normalized)) status = "common";
-    else if (uncommonWords.has(normalized) || approvedWords.has(normalized)) status = "approved-uncommon";
+    else if (coreWords.has(baseToken)) status = "common";
+    else if (uncommonWords.has(baseToken) || approvedWords.has(baseToken)) status = "approved-uncommon";
     else if (recognizedDomains.length > 0) status = "domain-recognized";
 
-    return { token, normalized, index, length, status, recognizedDomains, structuralIssues: tokenIssues };
+    return {
+      token,
+      normalized,
+      baseToken,
+      normalizedBaseToken: baseToken,
+      attachedParticles,
+      index,
+      length,
+      status,
+      recognizedDomains,
+      structuralIssues: tokenIssues,
+    };
   });
 }
