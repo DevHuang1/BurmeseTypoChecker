@@ -54,3 +54,9 @@
 - [x] Add instant below-scanner typo results with page, line, and character locations.
 - [x] Add responsive result-row interactions and correction metadata.
 - [x] Verify the UI, tests, type checks, and production build.
+
+## Scan Results Visibility Defect
+
+- [x] Inspect the live preview, recent browser console output, and scanner interaction state.
+- [x] Ensure results are hidden before a scan and visibly revealed after scanning completes.
+- [x] Verify the scan button and result panel in the live preview at desktop and mobile sizes.
