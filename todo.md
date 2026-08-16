@@ -190,7 +190,20 @@
 
 ## Iterator Regression Recurrence
 
-- [ ] Capture the current published scan failure context and determine the triggering file path or runtime state.
-- [ ] Trace all remaining iterator-protocol use in application code and relevant scan-time dependencies.
-- [ ] Patch the confirmed compatibility path and add a regression test for the observed failure shape.
-- [ ] Verify the published correction with the affected upload flow and error-free browser console.
+- [x] Capture the current published scan context and triggering file path; the supplied 84-page, 10.9 MB TypeScript PDF completed on the current production build with 50 findings, so the reported failure did not reproduce in the sandbox browser.
+- [ ] Trace iterator-protocol usage inside the relevant scan-time dependencies or built production bundle to identify the exact callsite that can trigger the reported error.
+- [x] Patch the confirmed compatibility path and add a regression test for the observed failure shape; an entry-point shim restores a missing native Array iterator only, with no arbitrary-object iteration.
+- [x] Verify the published correction with an image upload flow and error-free browser console; the PNG OCR scan completed with zero findings and no iterator error in console output.
+- [ ] Verify the shim against the user’s exact failing browser and file format when available, or capture runtime stack and file-type telemetry if local reproduction remains unavailable.
+
+## Supplied TypeScript PDF Regression Fixture
+
+- [x] Inspect and fingerprint `TypeScript-Baby-By-LwinMoePaing.pdf`; it is an 84-page PDF 1.7 file (10,985,384 bytes, SHA-256 `083f5374415aa9dc1d4a759cb0f6ade36cab6151e88a40cdfdc9a503e3af2254`).
+- [x] Reproduce the scan with the supplied PDF and capture browser evidence; the current published build completed with 50 findings and no iterator error in the captured console.
+- [x] Confirm fixture-shaped regression coverage; `pdfText.test.ts` models 84 pages with a 708-item long mixed payload and a >60,000-character document.
+
+## Source-Control Delivery
+
+- [ ] Inspect repository remotes and confirm the current branch can safely be delivered to `DevHuang1/BurmeseTypoChecker` on `main`.
+- [ ] Commit the current verified project state with a clear compatibility-fix summary.
+- [ ] Push the commit to `DevHuang1/BurmeseTypoChecker` on `main` and verify the resulting commit reference.
