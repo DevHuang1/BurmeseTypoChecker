@@ -173,3 +173,10 @@
 - [x] Trace every remaining iterator protocol access in scanner, extraction, highlighting, and export code; the application-level runtime access was isolated to `toIndexedArray` in `client/src/lib/compat.ts`.
 - [x] Replace the failing path with compatibility-safe normalization and add a focused regression test; iterable-only values are now rejected without touching `Symbol.iterator`.
 - [x] Re-run supported-format browser verification and publish the corrected build; published TXT, DOCX, PDF, and image OCR scans completed without the iterator error, and the image OCR result completed with zero findings.
+
+## OCR Timeout and Retry
+
+- [x] Add a bounded 45-second image-OCR request timeout with a clear user-facing timeout message.
+- [x] Add a retry action that reruns the selected image through the visible error toast without another upload.
+- [x] Add regression coverage for timeout classification and aborted OCR request handling.
+- [x] Verify ordinary live image OCR success after the change; the PNG fixture completed with zero findings.
