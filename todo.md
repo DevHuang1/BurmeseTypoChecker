@@ -183,7 +183,7 @@
 
 ## OCR Elapsed-Time Status
 
-- [ ] Add a live elapsed-time display while an image OCR request is running.
-- [ ] Show a “still working” status before the 45-second OCR timeout without disrupting successful scans.
-- [ ] Add regression coverage for elapsed-time status thresholds and cleanup.
-- [ ] Verify ordinary image OCR and publish the timing-status update.
+- [x] Add a live elapsed-time display while an image OCR request is running; live OCR showed “Reading image text · 1s elapsed.”
+- [x] Show a “still working” status before the 45-second OCR timeout without disrupting successful scans; the status switches at 10 seconds by implementation and regression test.
+- [x] Add regression coverage for elapsed-time status thresholds and cleanup; focused timing tests cover 9/10-second messaging and successful-request timer cleanup.
+- [x] Verify ordinary image OCR and publish the timing-status update; the published PNG scan completed successfully with zero findings.
