@@ -187,3 +187,10 @@
 - [x] Show a “still working” status before the 45-second OCR timeout without disrupting successful scans; the status switches at 10 seconds by implementation and regression test.
 - [x] Add regression coverage for elapsed-time status thresholds and cleanup; focused timing tests cover 9/10-second messaging and successful-request timer cleanup.
 - [x] Verify ordinary image OCR and publish the timing-status update; the published PNG scan completed successfully with zero findings.
+
+## Iterator Regression Recurrence
+
+- [ ] Capture the current published scan failure context and determine the triggering file path or runtime state.
+- [ ] Trace all remaining iterator-protocol use in application code and relevant scan-time dependencies.
+- [ ] Patch the confirmed compatibility path and add a regression test for the observed failure shape.
+- [ ] Verify the published correction with the affected upload flow and error-free browser console.
