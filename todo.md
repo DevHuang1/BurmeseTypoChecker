@@ -151,7 +151,7 @@
 - [x] Add exact finding highlights in result cards, selected-finding detail, and the extracted-text PDF view with selected-finding focus and navigation.
 - [x] Add regression coverage for exact finding source lengths, page transitions, selected highlight ranges, Burmese-safe line wrapping, and page-boundary content.
 - [x] Verify the highlighting interaction in the browser, run 39 tests, TypeScript checks, and the production build.
-- [ ] Save and publish the completed PDF location-highlighting update.
+- [x] Save and publish the completed PDF location-highlighting update.
 
 ## Scan Runtime Regression During PDF Highlight Work
 
@@ -159,3 +159,10 @@
 - [x] Trace scan extraction, finding mapping, selected-finding rendering, and PDF highlight preparation for remaining iterable-sensitive operations.
 - [x] Add regression coverage and remove remaining application-level iterator conversions from dictionary scanning and PDF export wrapping.
 - [x] Re-run the supplied PDF, verify the exact-source highlight interaction, and complete automated checks.
+
+## Live Web Interface Regression Reported Again
+
+- [x] Check published version parity and reproduce the user-facing flow in a fresh session; the supplied PDF completed with 50 findings on the published site.
+- [ ] Inspect the current published session’s browser console, network activity, and deployment logs after the new rendering fix is published.
+- [x] Apply the native ES2015/Safari compatibility target and replace full-document per-character highlight DOM rendering with a bounded context window and shared source-character cache; retain the existing 39-test regression coverage.
+- [ ] Verify the exact live flow after publication, including large-PDF results and extracted-text highlighting, and report the verified status.

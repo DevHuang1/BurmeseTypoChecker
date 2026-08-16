@@ -8,11 +8,14 @@ export type FindingHighlightRange = {
   markEnd: number;
 };
 
-export function getFindingHighlightRange(sourceText: string, index: number, length: number, context = 20, trailing = 36): FindingHighlightRange {
-  const chars = safeChars(sourceText);
+export function getFindingHighlightRangeFromChars(chars: string[], index: number, length: number, context = 20, trailing = 36): FindingHighlightRange {
   const start = Math.max(0, index - context);
   const end = Math.min(chars.length, index + length + trailing);
   const markStart = Math.max(start, Math.min(end, index));
   const markEnd = Math.max(markStart, Math.min(end, index + Math.max(0, length)));
   return { chars, start, end, markStart, markEnd };
+}
+
+export function getFindingHighlightRange(sourceText: string, index: number, length: number, context = 20, trailing = 36): FindingHighlightRange {
+  return getFindingHighlightRangeFromChars(safeChars(sourceText), index, length, context, trailing);
 }
