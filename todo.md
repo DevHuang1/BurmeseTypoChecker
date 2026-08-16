@@ -67,3 +67,10 @@
 - [x] Extract uploaded text and image OCR output into a scan-ready document model.
 - [x] Generate structural and dictionary-aware Burmese findings with source locations.
 - [x] Test text and image uploads, error states, and visible scan results.
+
+## Editable Extracted Text
+
+- [x] Inspect extracted-text state and current result synchronization.
+- [x] Add direct editing controls with save and reset actions.
+- [x] Re-scan edited content and refresh result locations.
+- [x] Verify the edit, reset, and re-scan experience.
