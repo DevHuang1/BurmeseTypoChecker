@@ -131,9 +131,16 @@
 
 ## Deep Scan Compatibility Regression
 
-- [ ] Reproduce the reported `undefined is not a function (near '...i of e...')` error on the exact failing file/format and capture its failing branch.
+- [x] Test the supplied TypeScript-Baby-By-LwinMoePaing.pdf on the published build; it completed without the reported runtime error, so the exact failure was not reproduced after the compatibility fix.
 - [x] Trace PDF, DOCX, TXT, and OCR extraction plus scan-location paths for remaining unsupported iterables or collection assumptions.
 - [x] Centralize compatibility normalization and add targeted regression tests for the compatibility helper and PDF collection path.
 - [x] Add scan-path regression tests for TXT, DOCX, and OCR/image inputs flowing into the scanner.
 - [x] Verify real PDF, DOCX, TXT, and image scans in the browser with no `Scan needs attention` runtime error.
 - [x] Save and publish the deep compatibility fix after the complete verification pass.
+
+## Supplied PDF Regression: TypeScript-Baby-By-LwinMoePaing.pdf
+
+- [x] Test the supplied PDF in the published site; it completed with 50 findings and no runtime error.
+- [x] Inspect the supplied PDF metadata and extracted-text shape: 84 pages, 142,895 extracted characters, unencrypted PDF 1.7.
+- [x] Apply the compatibility-safe collection and character normalization fix and cover the relevant PDF shape with regression tests.
+- [x] Verify the supplied PDF completes scanning in the browser, run all checks, and publish the correction.
