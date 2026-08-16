@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
 import {
   ArrowUpRight,
   Check,
@@ -48,6 +49,7 @@ function toDataUrl(file: File) {
 
 async function extractPdfText(file: File) {
   const pdfjs = await import("pdfjs-dist/legacy/build/pdf.mjs");
+  pdfjs.GlobalWorkerOptions.workerSrc = pdfWorkerUrl;
   const document = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
   const pages: string[] = [];
   for (let page = 1; page <= document.numPages; page += 1) {

@@ -74,3 +74,16 @@
 - [x] Add direct editing controls with save and reset actions.
 - [x] Re-scan edited content and refresh result locations.
 - [x] Verify the edit, reset, and re-scan experience.
+
+## Public Deployment Sync
+
+- [x] Inspect the public deployment against the latest editable-text checkpoint.
+- [x] Synchronize or restart the published site if it is stale.
+- [x] Verify upload, extracted-text editing, save, reset, and re-scan from the public URL.
+
+## PDF Worker Fix
+
+- [x] Inspect the PDF extraction path and worker configuration.
+- [x] Configure PDF.js GlobalWorkerOptions.workerSrc for browser builds.
+- [x] Add PDF extraction regression coverage and verify TXT, DOCX, and image paths remain intact.
+- [x] Rebuild, restart, and validate a real PDF scan.
