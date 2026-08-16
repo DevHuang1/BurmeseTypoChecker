@@ -163,6 +163,6 @@
 ## Live Web Interface Regression Reported Again
 
 - [x] Check published version parity and reproduce the user-facing flow in a fresh session; the supplied PDF completed with 50 findings on the published site.
-- [ ] Inspect the current published session’s browser console, network activity, and deployment logs after the new rendering fix is published.
+- [x] Inspect the current published session’s browser console, network activity, and deployment logs after the new rendering fix is published; no post-fix console errors were captured, 39 network responses were HTTP 200 with no 4xx/5xx/error entries, and production logs were clean.
 - [x] Apply the native ES2015/Safari compatibility target and replace full-document per-character highlight DOM rendering with a bounded context window and shared source-character cache; retain the existing 39-test regression coverage.
-- [ ] Verify the exact live flow after publication, including large-PDF results and extracted-text highlighting, and report the verified status.
+- [x] Verify the exact live flow after publication, including 50 large-PDF results and focused extracted-text highlighting at P1 · L1 · Char 38.
