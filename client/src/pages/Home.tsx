@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
-import pdfWorkerUrl from "pdfjs-dist/build/pdf.worker.min.mjs?url";
+import pdfWorkerUrl from "pdfjs-dist/legacy/build/pdf.worker.min.mjs?url";
 import {
   ArrowUpRight,
   Check,
@@ -29,6 +29,7 @@ import {
   Zap,
 } from "lucide-react";
 import { scanBurmeseDocument, type ScanFinding } from "@/lib/scanDocument";
+import { textFromPdfItems } from "@/lib/pdfText";
 
 type ScanStage = "idle" | "ready" | "extracting" | "scanning" | "complete" | "error";
 
@@ -64,15 +65,7 @@ async function extractPdfText(file: File, onProgress: (value: number) => void) {
     const pageProxy = await document.getPage(page);
     const content = await pageProxy.getTextContent();
     const rawItems = content && typeof content === "object" ? (content as { items?: unknown }).items : undefined;
-    const items = Array.isArray(rawItems) ? rawItems : [];
-    let pageText = "";
-    for (let itemIndex = 0; itemIndex < items.length; itemIndex += 1) {
-      const item = items[itemIndex];
-      if (item && typeof item === "object" && "str" in item && typeof (item as { str?: unknown }).str === "string") {
-        pageText += `${(item as { str: string }).str} `;
-      }
-    }
-    pages.push(pageText.trim());
+    pages.push(textFromPdfItems(rawItems));
   }
   onProgress(0.92);
   return pages.join("\f");
@@ -144,8 +137,11 @@ async function createCorrectedPdfDownload(text: string, filename: string) {
   const lineHeight = 27;
   let page = pdf.addPage([pageWidth, pageHeight]);
   let cursorY = pageHeight - margin;
-  for (const sourceLine of text.split(/\r?\n/)) {
-    for (const line of wrapPdfLine(sourceLine)) {
+  const sourceLines = text.split(/\r?\n/);
+  for (let sourceLineIndex = 0; sourceLineIndex < sourceLines.length; sourceLineIndex += 1) {
+    const wrappedLines = wrapPdfLine(sourceLines[sourceLineIndex]);
+    for (let lineIndex = 0; lineIndex < wrappedLines.length; lineIndex += 1) {
+      const line = wrappedLines[lineIndex];
       if (cursorY < margin + lineHeight) {
         page = pdf.addPage([pageWidth, pageHeight]);
         cursorY = pageHeight - margin;

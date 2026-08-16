@@ -113,3 +113,18 @@
 - [x] Isolate the current `undefined is not a function` PDF scan failure.
 - [x] Implement and test a minimal compatibility-safe PDF extraction path.
 - [x] Re-verify browser PDF scanning before resuming corrected-text export.
+
+## Corrected Burmese DOCX Export
+
+- [ ] Inspect the current TXT/PDF export implementation and available DOCX generation dependencies.
+- [ ] Add corrected Burmese DOCX generation with Noto Sans Myanmar font styling embedded in the document package.
+- [ ] Add the DOCX export control and success/error feedback to the extracted-text view.
+- [ ] Add automated coverage for DOCX package generation and Burmese text preservation.
+- [ ] Verify DOCX download in the browser, run tests/type checks/build, and publish the checkpoint.
+
+## Recurring PDF Scan Error Reported Again
+
+- [ ] Reproduce the exact `undefined is not a function (near '...i of e...')` error in the current website build.
+- [x] Inspect browser and development logs to identify the remaining incompatible iterator or collection path.
+- [x] Replace the failing runtime path with compatibility-safe indexed access and add regression coverage.
+- [ ] Re-test a real Burmese PDF scan in the browser, then run checks and publish the fix.
