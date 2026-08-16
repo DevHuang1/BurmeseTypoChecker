@@ -12,6 +12,7 @@ export type ScanFinding = {
   line: number;
   character: number;
   index: number;
+  length: number;
 };
 
 const issueCopy: Record<BurmeseTypoCode, { type: string; suggestion: string; confidence: string }> = {
@@ -43,7 +44,7 @@ function excerptFor(text: string, index: number, length: number) {
 export function scanBurmeseDocument(text: string): ScanFinding[] {
   const findings: ScanFinding[] = detectBurmeseSyllableTypos(text).map((issue) => {
     const copy = issueCopy[issue.code];
-    return { id: `${issue.code}-${issue.index}`, code: issue.code, type: copy.type, excerpt: excerptFor(text, issue.index, issue.length), suggestion: copy.suggestion, confidence: copy.confidence, ...locationFor(text, issue.index), index: issue.index };
+    return { id: `${issue.code}-${issue.index}`, code: issue.code, type: copy.type, excerpt: excerptFor(text, issue.index, issue.length), suggestion: copy.suggestion, confidence: copy.confidence, ...locationFor(text, issue.index), index: issue.index, length: issue.length };
   });
 
   const chars = safeChars(text);
@@ -52,7 +53,7 @@ export function scanBurmeseDocument(text: string): ScanFinding[] {
   while ((match = whitespace.exec(text)) !== null) {
     const codeUnitIndex = match.index;
     const index = safeChars(text.slice(0, codeUnitIndex)).length;
-    findings.push({ id: `EXTRA_SPACE-${index}`, code: "EXTRA_SPACE", type: "Repeated space", excerpt: excerptFor(text, index, safeChars(match[0]).length), suggestion: "Replace repeated spaces with one space.", confidence: "96%", ...locationFor(text, index), index });
+    findings.push({ id: `EXTRA_SPACE-${index}`, code: "EXTRA_SPACE", type: "Repeated space", excerpt: excerptFor(text, index, safeChars(match[0]).length), suggestion: "Replace repeated spaces with one space.", confidence: "96%", ...locationFor(text, index), index, length: safeChars(match[0]).length });
   }
 
   return findings.sort((left, right) => left.index - right.index).slice(0, 50);

@@ -1,4 +1,5 @@
 import { detectBurmeseSyllableTypos, type BurmeseTypoIssue } from "./burmeseTypos";
+import { safeChars, toIndexedArray } from "./compat";
 
 /**
  * Curated vocabulary is intentionally small and reviewable. It classifies known
@@ -190,7 +191,7 @@ const domainWords: Record<BurmeseLexiconDomain, Set<string>> = {
 };
 
 function extractBurmeseTokens(value: string) {
-  const chars = Array.from(normalize(value));
+  const chars = safeChars(normalize(value));
   const tokens: Array<{ token: string; index: number; length: number }> = [];
   let start = -1;
 
@@ -212,7 +213,7 @@ function overlaps(leftIndex: number, leftLength: number, rightIndex: number, rig
 
 function resolveAttachedParticles(token: string) {
   const normalizedToken = normalize(token);
-  const particles = [...BURMESE_ATTACHED_PARTICLES].sort((left, right) => right.length - left.length);
+  const particles = toIndexedArray<string>(BURMESE_ATTACHED_PARTICLES).sort((left, right) => right.length - left.length);
   const attachedParticles: string[] = [];
   let baseToken = normalizedToken;
 
@@ -236,9 +237,9 @@ function resolveAttachedParticles(token: string) {
  */
 export function classifyBurmeseWords(value: string, options: BurmeseDictionaryOptions = {}): BurmeseWordClassification[] {
   const structuralIssues = detectBurmeseSyllableTypos(value);
-  const approvedWords = new Set(Array.from(options.additionalApprovedWords ?? [], normalize));
+  const approvedWords = new Set(toIndexedArray<string>(options.additionalApprovedWords ?? []).map(normalize));
   const includedDomains = new Set<BurmeseLexiconDomain>(
-    Array.from(options.includedDomains ?? (["legal", "medical"] as BurmeseLexiconDomain[])),
+    toIndexedArray<BurmeseLexiconDomain>(options.includedDomains ?? (["legal", "medical"] as BurmeseLexiconDomain[])),
   );
 
   return extractBurmeseTokens(value).map(({ token, index, length }) => {

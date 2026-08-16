@@ -144,3 +144,18 @@
 - [x] Inspect the supplied PDF metadata and extracted-text shape: 84 pages, 142,895 extracted characters, unencrypted PDF 1.7.
 - [x] Apply the compatibility-safe collection and character normalization fix and cover the relevant PDF shape with regression tests.
 - [x] Verify the supplied PDF completes scanning in the browser, run all checks, and publish the correction.
+
+## PDF Finding Location Highlighting
+
+- [x] Inspect the current selected-finding state, extracted-text rendering, and page/line/character metadata.
+- [x] Add exact finding highlights in result cards, selected-finding detail, and the extracted-text PDF view with selected-finding focus and navigation.
+- [x] Add regression coverage for exact finding source lengths, page transitions, selected highlight ranges, Burmese-safe line wrapping, and page-boundary content.
+- [x] Verify the highlighting interaction in the browser, run 39 tests, TypeScript checks, and the production build.
+- [ ] Save and publish the completed PDF location-highlighting update.
+
+## Scan Runtime Regression During PDF Highlight Work
+
+- [x] Re-test the supplied TypeScript PDF on the current preview; it completed with 50 findings and the recurring runtime error was not reproduced.
+- [x] Trace scan extraction, finding mapping, selected-finding rendering, and PDF highlight preparation for remaining iterable-sensitive operations.
+- [x] Add regression coverage and remove remaining application-level iterator conversions from dictionary scanning and PDF export wrapping.
+- [x] Re-run the supplied PDF, verify the exact-source highlight interaction, and complete automated checks.
