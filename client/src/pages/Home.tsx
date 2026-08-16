@@ -34,6 +34,7 @@ import { createCorrectedDocxBlob } from "@/lib/docxExport";
 import { safeChars } from "@/lib/compat";
 import { getFindingHighlightRangeFromChars } from "@/lib/findingHighlight";
 import { wrapPdfLine } from "@/lib/pdfLayout";
+import { isOcrTimeoutError, requestOcrText } from "@/lib/ocrTimeout";
 
 type ScanStage = "idle" | "ready" | "extracting" | "scanning" | "complete" | "error";
 
@@ -92,10 +93,10 @@ async function extractUploadedText(file: File, onProgress: (value: number) => vo
   }
   if (extension === "pdf") return extractPdfText(file, onProgress);
   if (file.type.startsWith("image/")) {
-    const response = await fetch("/api/ocr", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ imageDataUrl: await toDataUrl(file) }) });
-    const payload = (await response.json()) as { text?: string; error?: string };
-    if (!response.ok || !payload.text) throw new Error(payload.error || "No readable Burmese text was found in this image.");
-    return payload.text;
+    onProgress(0.2);
+    const text = await requestOcrText(await toDataUrl(file));
+    onProgress(0.92);
+    return text;
   }
   throw new Error("Supported formats are TXT, DOCX, PDF, PNG, JPG, JPEG, and WEBP.");
 }
@@ -217,7 +218,7 @@ export default function Home() {
       const text = await extractUploadedText(file, setProgress);
       if (!text.trim()) throw new Error("No readable text was found in this file.");
       setSourceText(text); setEditableText(text); scanText(text, "Scan complete");
-    } catch (scanError) { const message = scanError instanceof Error ? scanError.message : "The file could not be scanned."; setProgress(0); setError(message); setStage("error"); toast.error("Scan could not complete", { description: message }); }
+    } catch (scanError) { const message = scanError instanceof Error ? scanError.message : "The file could not be scanned."; const timedOut = isOcrTimeoutError(scanError); setProgress(0); setError(message); setStage("error"); toast.error(timedOut ? "Image OCR timed out" : "Scan could not complete", timedOut ? { description: message, action: { label: "Retry image OCR", onClick: () => { void startScan(); } } } : { description: message }); }
   };
   const saveAndRescanEdits = () => {
     if (!editableText.trim()) { toast.error("Keep at least one character", { description: "The extracted-text editor cannot scan an empty document." }); return; }
