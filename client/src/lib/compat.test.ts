@@ -13,8 +13,9 @@ describe("compatibility helpers", () => {
   it("normalizes arrays and array-like objects without invoking iterators", () => {
     expect(toIndexedArray({ 0: "a", 1: "b", length: 2 })).toEqual(["a", "b"]);
     expect(toIndexedArray({ length: "bad" })).toEqual([]);
+    expect(toIndexedArray(new Set(["a", "b"]))).toEqual(["a", "b"]);
     const iterableOnly = {
-      [Symbol.iterator]: () => new Set(["a", "b"])[Symbol.iterator](),
+      [Symbol.iterator]: () => new Set(["c", "d"])[Symbol.iterator](),
     };
     expect(toIndexedArray(iterableOnly)).toEqual([]);
   });

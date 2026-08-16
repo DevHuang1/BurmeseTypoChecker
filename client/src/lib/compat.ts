@@ -47,5 +47,13 @@ export function toIndexedArray<T = unknown>(value: unknown): T[] {
     return [];
   }
 
+  if (typeof Set !== "undefined" && value instanceof Set) {
+    const result: T[] = [];
+    value.forEach((entry: T) => {
+      if (result.length < 100000) result.push(entry);
+    });
+    return result;
+  }
+
   return [];
 }
