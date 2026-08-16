@@ -267,7 +267,7 @@ export default function Home() {
   };
 
   const busy = stage === "extracting" || stage === "scanning";
-  const progressLabel = stage === "extracting" && file?.type.startsWith("image/") ? `${getOcrProgressStatus(ocrElapsedSeconds)} · ${ocrElapsedSeconds}s elapsed` : stage === "extracting" && file?.name.toLowerCase().endsWith(".pdf") ? `Reading PDF · ${Math.round(progress * 100)}%` : stage === "extracting" ? "Extracting text…" : stage === "scanning" ? "Checking Burmese…" : stage === "complete" ? "Scan complete" : "Ready to scan";
+  const progressLabel = stage === "extracting" && ocrStartedAt !== null ? `${getOcrProgressStatus(ocrElapsedSeconds)} · ${ocrElapsedSeconds}s elapsed` : stage === "extracting" && file?.name.toLowerCase().endsWith(".pdf") ? `Reading PDF · ${Math.round(progress * 100)}%` : stage === "extracting" ? "Extracting text…" : stage === "scanning" ? "Checking Burmese…" : stage === "complete" ? "Scan complete" : "Ready to scan";
   const selectedFinding = findings.find((finding) => finding.id === selectedFindingId);
   const fileName = file?.name ?? "No file selected";
   const hasUnsavedEdits = editableText !== sourceText;
