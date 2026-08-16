@@ -10,9 +10,12 @@ describe("compatibility helpers", () => {
     expect(safeNormalize("မြန်မာ")).toBe("မြန်မာ");
   });
 
-  it("normalizes arrays, array-like objects, and safe iterables", () => {
+  it("normalizes arrays and array-like objects without invoking iterators", () => {
     expect(toIndexedArray({ 0: "a", 1: "b", length: 2 })).toEqual(["a", "b"]);
-    expect(toIndexedArray(new Set(["a", "b"]))).toEqual(["a", "b"]);
     expect(toIndexedArray({ length: "bad" })).toEqual([]);
+    const iterableOnly = {
+      [Symbol.iterator]: () => new Set(["a", "b"])[Symbol.iterator](),
+    };
+    expect(toIndexedArray(iterableOnly)).toEqual([]);
   });
 });

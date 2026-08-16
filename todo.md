@@ -166,3 +166,10 @@
 - [x] Inspect the current published session’s browser console, network activity, and deployment logs after the new rendering fix is published; no post-fix console errors were captured, 39 network responses were HTTP 200 with no 4xx/5xx/error entries, and production logs were clean.
 - [x] Apply the native ES2015/Safari compatibility target and replace full-document per-character highlight DOM rendering with a bounded context window and shared source-character cache; retain the existing 39-test regression coverage.
 - [x] Verify the exact live flow after publication, including 50 large-PDF results and focused extracted-text highlighting at P1 · L1 · Char 38.
+
+## New Published Iterator Regression
+
+- [ ] Reproduce `d[Sm("iterator")] is not a function` on the published scan flow and capture the failing format/path.
+- [ ] Trace every remaining iterator protocol access in scanner, extraction, highlighting, and export code.
+- [ ] Replace the failing path with compatibility-safe normalization and add a focused regression test.
+- [ ] Re-run supported-format browser verification and publish the corrected build.

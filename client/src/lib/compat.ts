@@ -28,7 +28,7 @@ export function safeChars(text: string): string[] {
   return chars;
 }
 
-/** Convert arrays, array-like PDF collections, and safe iterables without for-of. */
+/** Convert arrays and array-like PDF collections without touching Symbol.iterator. */
 export function toIndexedArray<T = unknown>(value: unknown): T[] {
   if (Array.isArray(value)) return value.slice() as T[];
   if (value == null) return [];
@@ -47,17 +47,5 @@ export function toIndexedArray<T = unknown>(value: unknown): T[] {
     return [];
   }
 
-  try {
-    const iteratorFactory = typeof Symbol !== "undefined" ? (value as { [Symbol.iterator]?: () => unknown })[Symbol.iterator] : undefined;
-    if (typeof iteratorFactory !== "function") return [];
-    const iterator = iteratorFactory.call(value) as { next?: () => { done?: boolean; value?: T } };
-    if (!iterator || typeof iterator.next !== "function") return [];
-    const result: T[] = [];
-    for (let step = iterator.next(); !step.done && result.length < 100000; step = iterator.next()) {
-      result.push(step.value as T);
-    }
-    return result;
-  } catch {
-    return [];
-  }
+  return [];
 }
