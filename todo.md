@@ -87,3 +87,10 @@
 - [x] Configure PDF.js GlobalWorkerOptions.workerSrc for browser builds.
 - [x] Add PDF extraction regression coverage and verify TXT, DOCX, and image paths remain intact.
 - [x] Rebuild, restart, and validate a real PDF scan.
+
+## PDF Scan Feedback Fix
+
+- [x] Inspect the PDF progress state and undefined-function error path.
+- [x] Add a visible PDF extraction progress bar or loading animation.
+- [x] Make PDF progress and error rendering safe when values are missing.
+- [x] Verify successful PDF scans and regression coverage.
