@@ -128,3 +128,12 @@
 - [x] Inspect browser and development logs to identify the remaining incompatible iterator or collection path.
 - [x] Replace the failing runtime path with compatibility-safe indexed access and add regression coverage.
 - [x] Re-test a real Burmese PDF scan on the published website, then run checks and publish the fix.
+
+## Deep Scan Compatibility Regression
+
+- [ ] Reproduce the reported `undefined is not a function (near '...i of e...')` error on the exact failing file/format and capture its failing branch.
+- [x] Trace PDF, DOCX, TXT, and OCR extraction plus scan-location paths for remaining unsupported iterables or collection assumptions.
+- [x] Centralize compatibility normalization and add targeted regression tests for the compatibility helper and PDF collection path.
+- [x] Add scan-path regression tests for TXT, DOCX, and OCR/image inputs flowing into the scanner.
+- [ ] Verify real PDF, DOCX, TXT, and image scans in the browser with no `Scan needs attention` runtime error.
+- [ ] Save and publish the deep compatibility fix after the complete verification pass.

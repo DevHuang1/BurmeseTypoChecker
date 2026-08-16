@@ -4,6 +4,8 @@
  * are very likely typos without attempting to replace a full Burmese lexicon.
  */
 
+import { safeChars } from "./compat";
+
 export type BurmeseTypoCode =
   | "ORPHAN_COMBINING_MARK"
   | "MISPLACED_VIRAMA"
@@ -27,7 +29,7 @@ const virama = "\u1039";
 const asat = "\u103A";
 const nga = "\u1004";
 
-const toChars = (value: string) => Array.from(value.normalize("NFC"));
+const toChars = (value: string) => safeChars(value);
 
 function isKinziAt(chars: string[], index: number) {
   return chars[index] === nga && chars[index + 1] === asat && chars[index + 2] === virama;

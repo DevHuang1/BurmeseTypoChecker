@@ -8,7 +8,7 @@ describe("textFromPdfItems", () => {
 
   it("returns an empty string for non-array or malformed collections", () => {
     expect(textFromPdfItems(undefined)).toBe("");
-    expect(textFromPdfItems({ 0: { str: "အမှု" }, length: 1 })).toBe("");
+    expect(textFromPdfItems({ 0: { str: "အမှု" }, length: 1 })).toBe("အမှု");
     expect(textFromPdfItems([{ str: 12 }, null, { noText: true }])).toBe("");
   });
 });

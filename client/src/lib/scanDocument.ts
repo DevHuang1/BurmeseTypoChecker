@@ -1,3 +1,4 @@
+import { safeChars } from "./compat";
 import { detectBurmeseSyllableTypos, type BurmeseTypoCode } from "./burmeseTypos";
 
 export type ScanFinding = {
@@ -23,20 +24,16 @@ const issueCopy: Record<BurmeseTypoCode, { type: string; suggestion: string; con
 };
 
 function locationFor(text: string, index: number) {
-  const before = Array.from(text).slice(0, index).join("");
+  const before = safeChars(text).slice(0, index).join("");
   const pages = before.split("\f");
   const pageText = pages[pages.length - 1] ?? "";
   const lines = pageText.split(/\r?\n/);
   const lastLine = lines[lines.length - 1] ?? "";
-  return {
-    page: pages.length,
-    line: lines.length,
-    character: Array.from(lastLine).length + 1,
-  };
+  return { page: pages.length, line: lines.length, character: safeChars(lastLine).length + 1 };
 }
 
 function excerptFor(text: string, index: number, length: number) {
-  const chars = Array.from(text);
+  const chars = safeChars(text);
   const start = Math.max(0, index - 20);
   const end = Math.min(chars.length, index + length + 36);
   return `${start > 0 ? "…" : ""}${chars.slice(start, end).join("").replace(/\s+/g, " ").trim()}${end < chars.length ? "…" : ""}`;
@@ -46,34 +43,16 @@ function excerptFor(text: string, index: number, length: number) {
 export function scanBurmeseDocument(text: string): ScanFinding[] {
   const findings: ScanFinding[] = detectBurmeseSyllableTypos(text).map((issue) => {
     const copy = issueCopy[issue.code];
-    return {
-      id: `${issue.code}-${issue.index}`,
-      code: issue.code,
-      type: copy.type,
-      excerpt: excerptFor(text, issue.index, issue.length),
-      suggestion: copy.suggestion,
-      confidence: copy.confidence,
-      ...locationFor(text, issue.index),
-      index: issue.index,
-    };
+    return { id: `${issue.code}-${issue.index}`, code: issue.code, type: copy.type, excerpt: excerptFor(text, issue.index, issue.length), suggestion: copy.suggestion, confidence: copy.confidence, ...locationFor(text, issue.index), index: issue.index };
   });
 
-  const chars = Array.from(text);
+  const chars = safeChars(text);
   const whitespace = / {2,}/g;
   let match: RegExpExecArray | null;
   while ((match = whitespace.exec(text)) !== null) {
     const codeUnitIndex = match.index;
-    const index = Array.from(text.slice(0, codeUnitIndex)).length;
-    findings.push({
-      id: `EXTRA_SPACE-${index}`,
-      code: "EXTRA_SPACE",
-      type: "Repeated space",
-      excerpt: excerptFor(text, index, Array.from(match[0]).length),
-      suggestion: "Replace repeated spaces with one space.",
-      confidence: "96%",
-      ...locationFor(chars.join(""), index),
-      index,
-    });
+    const index = safeChars(text.slice(0, codeUnitIndex)).length;
+    findings.push({ id: `EXTRA_SPACE-${index}`, code: "EXTRA_SPACE", type: "Repeated space", excerpt: excerptFor(text, index, safeChars(match[0]).length), suggestion: "Replace repeated spaces with one space.", confidence: "96%", ...locationFor(text, index), index });
   }
 
   return findings.sort((left, right) => left.index - right.index).slice(0, 50);
