@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import { PDFDocument, rgb } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
@@ -34,7 +34,7 @@ import { createCorrectedDocxBlob } from "@/lib/docxExport";
 import { safeChars } from "@/lib/compat";
 import { getFindingHighlightRangeFromChars } from "@/lib/findingHighlight";
 import { wrapPdfLine } from "@/lib/pdfLayout";
-import { isOcrTimeoutError, requestOcrText } from "@/lib/ocrTimeout";
+import { getOcrElapsedSeconds, getOcrProgressStatus, isOcrTimeoutError, requestOcrText } from "@/lib/ocrTimeout";
 
 type ScanStage = "idle" | "ready" | "extracting" | "scanning" | "complete" | "error";
 
@@ -193,13 +193,23 @@ export default function Home() {
   const [tab, setTab] = useState<"review" | "original">("review");
   const [editingExtractedText, setEditingExtractedText] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [ocrStartedAt, setOcrStartedAt] = useState<number | null>(null);
+  const [ocrElapsedSeconds, setOcrElapsedSeconds] = useState(0);
+
+  useEffect(() => {
+    if (ocrStartedAt === null) return undefined;
+    const updateElapsed = () => setOcrElapsedSeconds(getOcrElapsedSeconds(ocrStartedAt, Date.now()));
+    updateElapsed();
+    const timerId = window.setInterval(updateElapsed, 1_000);
+    return () => window.clearInterval(timerId);
+  }, [ocrStartedAt]);
 
   const info = (title: string) => toast.info(title, { description: "This workspace action is ready for your next review." });
   const chooseFile = () => inputRef.current?.click();
   const onFile = (event: React.ChangeEvent<HTMLInputElement>) => {
     const nextFile = event.target.files?.[0];
     if (!nextFile) return;
-    setFile(nextFile);     setSourceText(""); setEditableText(""); setFindings([]); setSelectedFindingId(null); setStage("ready"); setError(null); setEditingExtractedText(false); setProgress(0);
+    setFile(nextFile);     setSourceText(""); setEditableText(""); setFindings([]); setSelectedFindingId(null); setStage("ready"); setError(null); setEditingExtractedText(false); setProgress(0); setOcrStartedAt(null); setOcrElapsedSeconds(0);
     toast.success("File ready to scan", { description: nextFile.name });
   };
   const scanText = (text: string, message: string) => {
@@ -213,12 +223,13 @@ export default function Home() {
   };
   const startScan = async () => {
     if (!file) { toast.info("Choose a file first", { description: "Upload a TXT, DOCX, PDF, or image before scanning." }); chooseFile(); return; }
-    setError(null); setFindings([]); setSelectedFindingId(null); setProgress(0.08); setStage("extracting");
+    const imageOcr = file.type.startsWith("image/");
+    setError(null); setFindings([]); setSelectedFindingId(null); setProgress(0.08); setStage("extracting"); setOcrElapsedSeconds(0); setOcrStartedAt(imageOcr ? Date.now() : null);
     try {
       const text = await extractUploadedText(file, setProgress);
       if (!text.trim()) throw new Error("No readable text was found in this file.");
       setSourceText(text); setEditableText(text); scanText(text, "Scan complete");
-    } catch (scanError) { const message = scanError instanceof Error ? scanError.message : "The file could not be scanned."; const timedOut = isOcrTimeoutError(scanError); setProgress(0); setError(message); setStage("error"); toast.error(timedOut ? "Image OCR timed out" : "Scan could not complete", timedOut ? { description: message, action: { label: "Retry image OCR", onClick: () => { void startScan(); } } } : { description: message }); }
+    } catch (scanError) { const message = scanError instanceof Error ? scanError.message : "The file could not be scanned."; const timedOut = isOcrTimeoutError(scanError); setProgress(0); setError(message); setStage("error"); toast.error(timedOut ? "Image OCR timed out" : "Scan could not complete", timedOut ? { description: message, action: { label: "Retry image OCR", onClick: () => { void startScan(); } } } : { description: message }); } finally { setOcrStartedAt(null); }
   };
   const saveAndRescanEdits = () => {
     if (!editableText.trim()) { toast.error("Keep at least one character", { description: "The extracted-text editor cannot scan an empty document." }); return; }
@@ -256,7 +267,7 @@ export default function Home() {
   };
 
   const busy = stage === "extracting" || stage === "scanning";
-  const progressLabel = stage === "extracting" && file?.name.toLowerCase().endsWith(".pdf") ? `Reading PDF · ${Math.round(progress * 100)}%` : stage === "extracting" ? "Extracting text…" : stage === "scanning" ? "Checking Burmese…" : stage === "complete" ? "Scan complete" : "Ready to scan";
+  const progressLabel = stage === "extracting" && file?.type.startsWith("image/") ? `${getOcrProgressStatus(ocrElapsedSeconds)} · ${ocrElapsedSeconds}s elapsed` : stage === "extracting" && file?.name.toLowerCase().endsWith(".pdf") ? `Reading PDF · ${Math.round(progress * 100)}%` : stage === "extracting" ? "Extracting text…" : stage === "scanning" ? "Checking Burmese…" : stage === "complete" ? "Scan complete" : "Ready to scan";
   const selectedFinding = findings.find((finding) => finding.id === selectedFindingId);
   const fileName = file?.name ?? "No file selected";
   const hasUnsavedEdits = editableText !== sourceText;

@@ -180,3 +180,10 @@
 - [x] Add a retry action that reruns the selected image through the visible error toast without another upload.
 - [x] Add regression coverage for timeout classification and aborted OCR request handling.
 - [x] Verify ordinary live image OCR success after the change; the PNG fixture completed with zero findings.
+
+## OCR Elapsed-Time Status
+
+- [ ] Add a live elapsed-time display while an image OCR request is running.
+- [ ] Show a “still working” status before the 45-second OCR timeout without disrupting successful scans.
+- [ ] Add regression coverage for elapsed-time status thresholds and cleanup.
+- [ ] Verify ordinary image OCR and publish the timing-status update.

@@ -1,4 +1,5 @@
 export const OCR_TIMEOUT_MS = 45_000;
+export const OCR_STILL_WORKING_AFTER_MS = 10_000;
 
 export class OcrTimeoutError extends Error {
   constructor() {
@@ -9,6 +10,14 @@ export class OcrTimeoutError extends Error {
 
 export function isOcrTimeoutError(error: unknown): error is OcrTimeoutError {
   return error instanceof OcrTimeoutError || (error instanceof Error && error.name === "OcrTimeoutError");
+}
+
+export function getOcrElapsedSeconds(startedAt: number, currentTime: number): number {
+  return Math.max(0, Math.floor((currentTime - startedAt) / 1000));
+}
+
+export function getOcrProgressStatus(elapsedSeconds: number): string {
+  return elapsedSeconds * 1000 >= OCR_STILL_WORKING_AFTER_MS ? "Still working — reading image text" : "Reading image text";
 }
 
 export async function requestOcrText(
