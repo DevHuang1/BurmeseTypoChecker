@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
+import { extractBurmeseTextFromImage } from "./server/ocr";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -203,7 +204,31 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+function vitePluginOcrApi(): Plugin {
+  return {
+    name: "burmese-ocr-api",
+    configureServer(server: ViteDevServer) {
+      server.middlewares.use("/api/ocr", (req, res, next) => {
+        if (req.method !== "POST") return next();
+        let body = "";
+        req.on("data", (chunk) => { body += chunk.toString(); });
+        req.on("end", async () => {
+          try {
+            const payload = JSON.parse(body) as { imageDataUrl?: string };
+            const text = await extractBurmeseTextFromImage(String(payload.imageDataUrl ?? ""));
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ text }));
+          } catch (error) {
+            res.writeHead(400, { "Content-Type": "application/json" });
+            res.end(JSON.stringify({ error: error instanceof Error ? error.message : "Image OCR failed." }));
+          }
+        });
+      });
+    },
+  };
+}
+
+const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginOcrApi()];
 
 export default defineConfig({
   plugins,

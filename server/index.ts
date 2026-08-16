@@ -2,6 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import path from "path";
 import { fileURLToPath } from "url";
+import { extractBurmeseTextFromImage } from "./ocr";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,6 +10,16 @@ const __dirname = path.dirname(__filename);
 async function startServer() {
   const app = express();
   const server = createServer(app);
+
+  app.use(express.json({ limit: "9mb" }));
+  app.post("/api/ocr", async (req, res) => {
+    try {
+      const text = await extractBurmeseTextFromImage(String(req.body?.imageDataUrl ?? ""));
+      res.json({ text });
+    } catch (error) {
+      res.status(400).json({ error: error instanceof Error ? error.message : "Image OCR failed." });
+    }
+  });
 
   // Serve static files from dist/public in production
   const staticPath =

@@ -60,3 +60,10 @@
 - [x] Inspect the live preview, recent browser console output, and scanner interaction state.
 - [x] Ensure results are hidden before a scan and visibly revealed after scanning completes.
 - [x] Verify the scan button and result panel in the live preview at desktop and mobile sizes.
+
+## Functional File and Image Scanning
+
+- [x] Review the project OCR helper and choose supported upload formats.
+- [x] Extract uploaded text and image OCR output into a scan-ready document model.
+- [x] Generate structural and dictionary-aware Burmese findings with source locations.
+- [x] Test text and image uploads, error states, and visible scan results.
