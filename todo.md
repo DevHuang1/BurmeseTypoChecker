@@ -100,3 +100,16 @@
 - [x] Inspect the public PDF error and browser extraction compatibility path.
 - [x] Add a compatibility-safe fallback for PDF text item collections.
 - [x] Re-test a real public PDF scan and the full regression suite.
+
+## Corrected Text Export
+
+- [x] Inspect the existing extracted-text and export controls.
+- [x] Add downloadable corrected TXT export.
+- [x] Add newly generated corrected Burmese PDF export.
+- [x] Verify exports use the latest saved corrections and pass regression checks.
+
+## PDF Scan Regression During Export Work
+
+- [x] Isolate the current `undefined is not a function` PDF scan failure.
+- [x] Implement and test a minimal compatibility-safe PDF extraction path.
+- [x] Re-verify browser PDF scanning before resuming corrected-text export.
