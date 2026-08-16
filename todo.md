@@ -204,6 +204,6 @@
 
 ## Source-Control Delivery
 
-- [ ] Inspect repository remotes and confirm the current branch can safely be delivered to `DevHuang1/BurmeseTypoChecker` on `main`.
-- [ ] Commit the current verified project state with a clear compatibility-fix summary.
-- [ ] Push the commit to `DevHuang1/BurmeseTypoChecker` on `main` and verify the resulting commit reference.
+- [x] Inspect repository remotes and confirm the current branch can safely be delivered to `DevHuang1/BurmeseTypoChecker` on `main`.
+- [x] Confirm the verified scanner and compatibility implementation was committed across the existing main-branch delivery history; the final documentation commit is `91b0bf7` (`docs: record iterator regression verification`).
+- [x] Push the accumulated main-branch commits to `DevHuang1/BurmeseTypoChecker` and verify the remote head (`91b0bf7` at the time of verification).
