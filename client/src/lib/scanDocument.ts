@@ -25,12 +25,13 @@ const issueCopy: Record<BurmeseTypoCode, { type: string; suggestion: string; con
 function locationFor(text: string, index: number) {
   const before = Array.from(text).slice(0, index).join("");
   const pages = before.split("\f");
-  const pageText = pages.at(-1) ?? "";
+  const pageText = pages[pages.length - 1] ?? "";
   const lines = pageText.split(/\r?\n/);
+  const lastLine = lines[lines.length - 1] ?? "";
   return {
     page: pages.length,
     line: lines.length,
-    character: Array.from(lines.at(-1) ?? "").length + 1,
+    character: Array.from(lastLine).length + 1,
   };
 }
 
@@ -59,8 +60,9 @@ export function scanBurmeseDocument(text: string): ScanFinding[] {
 
   const chars = Array.from(text);
   const whitespace = / {2,}/g;
-  for (const match of Array.from(text.matchAll(whitespace))) {
-    const codeUnitIndex = match.index ?? 0;
+  let match: RegExpExecArray | null;
+  while ((match = whitespace.exec(text)) !== null) {
+    const codeUnitIndex = match.index;
     const index = Array.from(text.slice(0, codeUnitIndex)).length;
     findings.push({
       id: `EXTRA_SPACE-${index}`,

@@ -94,3 +94,9 @@
 - [x] Add a visible PDF extraction progress bar or loading animation.
 - [x] Make PDF progress and error rendering safe when values are missing.
 - [x] Verify successful PDF scans and regression coverage.
+
+## Recurring PDF Runtime Error
+
+- [x] Inspect the public PDF error and browser extraction compatibility path.
+- [x] Add a compatibility-safe fallback for PDF text item collections.
+- [x] Re-test a real public PDF scan and the full regression suite.
