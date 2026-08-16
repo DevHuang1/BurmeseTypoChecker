@@ -169,7 +169,7 @@
 
 ## New Published Iterator Regression
 
-- [x] Reproduce `d[Sm("iterator")] is not a function` on the published scan flow and capture the failing format/path; the remaining risk was the generic iterable fallback in collection normalization.
+- [x] Analyze the user-reported `d[Sm("iterator")] is not a function` failure and identify the remaining generic iterable fallback in collection normalization; the original broken session was not independently reproducible after the prior fix, but the corrected build was verified clean.
 - [x] Trace every remaining iterator protocol access in scanner, extraction, highlighting, and export code; the application-level runtime access was isolated to `toIndexedArray` in `client/src/lib/compat.ts`.
 - [x] Replace the failing path with compatibility-safe normalization and add a focused regression test; iterable-only values are now rejected without touching `Symbol.iterator`.
-- [x] Re-run supported-format browser verification and publish the corrected build; the published PDF scan completed with one finding and a clean post-scan console.
+- [x] Re-run supported-format browser verification and publish the corrected build; published TXT, DOCX, PDF, and image OCR scans completed without the iterator error, and the image OCR result completed with zero findings.
