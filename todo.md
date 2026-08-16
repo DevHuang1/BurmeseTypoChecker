@@ -135,5 +135,5 @@
 - [x] Trace PDF, DOCX, TXT, and OCR extraction plus scan-location paths for remaining unsupported iterables or collection assumptions.
 - [x] Centralize compatibility normalization and add targeted regression tests for the compatibility helper and PDF collection path.
 - [x] Add scan-path regression tests for TXT, DOCX, and OCR/image inputs flowing into the scanner.
-- [ ] Verify real PDF, DOCX, TXT, and image scans in the browser with no `Scan needs attention` runtime error.
-- [ ] Save and publish the deep compatibility fix after the complete verification pass.
+- [x] Verify real PDF, DOCX, TXT, and image scans in the browser with no `Scan needs attention` runtime error.
+- [x] Save and publish the deep compatibility fix after the complete verification pass.
