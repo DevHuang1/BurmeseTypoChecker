@@ -16,4 +16,21 @@ describe("scanBurmeseDocument", () => {
     const [finding] = scanBurmeseDocument("တရားရုံး  ဆေးရုံ");
     expect(finding).toMatchObject({ code: "EXTRA_SPACE", type: "Repeated space", confidence: "96%", length: 2 });
   });
+
+  it("carries a correction string on auto-fixable findings", () => {
+    const [finding] = scanBurmeseDocument("အဖွင့်\nကိိ");
+    expect(finding.code).toBe("DUPLICATE_VOWEL_MARK");
+    expect(finding.correction).toBe("အဖွင့်\nကိ");
+    expect(finding.replacement).toBe("ိ");
+    const spaceFinding = scanBurmeseDocument("a  b").find((item) => item.code === "EXTRA_SPACE");
+    expect(spaceFinding?.correction).toBe("a b");
+    expect(spaceFinding?.replacement).toBe(" ");
+  });
+
+  it("returns all findings instead of capping at fifty", () => {
+    const findings = scanBurmeseDocument("\u1000\u102D\u102D".repeat(60));
+    expect(findings.length).toBeGreaterThan(50);
+    expect(findings.length).toBe(60);
+    expect(findings.every((finding) => finding.code === "DUPLICATE_VOWEL_MARK")).toBe(true);
+  });
 });

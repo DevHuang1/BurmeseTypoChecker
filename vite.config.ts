@@ -241,6 +241,9 @@ export default defineConfig({
   },
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
+  optimizeDeps: {
+    include: ["pdfjs-dist/legacy/build/pdf.mjs", "mammoth/mammoth.browser"],
+  },
   build: {
     target: ["es2015", "safari12"],
     outDir: path.resolve(import.meta.dirname, "dist/public"),

@@ -12,7 +12,10 @@ export type BurmeseTypoCode =
   | "INCOMPLETE_KINZI"
   | "DUPLICATE_VOWEL_MARK"
   | "DUPLICATE_MEDIAL"
-  | "MEDIAL_AFTER_VOWEL";
+  | "MEDIAL_AFTER_VOWEL"
+  | "DOUBLE_ASAT"
+  | "MISPLACED_ASAT"
+  | "UNSTACKED_VIRAMA";
 
 export type BurmeseTypoIssue = {
   code: BurmeseTypoCode;
@@ -27,6 +30,7 @@ const vowel = /[\u102B-\u1032\u1036]/;
 const combining = /[\u102B-\u103E\u1056-\u1059\u1060-\u109D]/;
 const virama = "\u1039";
 const asat = "\u103A";
+const visarga = "\u1038";
 const nga = "\u1004";
 
 const toChars = (value: string) => safeChars(value);
@@ -72,6 +76,9 @@ export function detectBurmeseSyllableTypos(value: string): BurmeseTypoIssue[] {
       if (!followsKinzi && !consonant.test(previous ?? "")) {
         add("MISPLACED_VIRAMA", index, 1, "The stacking virama must follow a Myanmar consonant or a complete kinzi prefix.");
       }
+      if (!consonant.test(chars[index + 1] ?? "") && !followsKinzi) {
+        add("UNSTACKED_VIRAMA", index, 1, "A stacking virama must be followed by a base consonant.");
+      }
     }
 
     if (isKinziAt(chars, index) && !consonant.test(chars[index + 3] ?? "")) {
@@ -86,8 +93,16 @@ export function detectBurmeseSyllableTypos(value: string): BurmeseTypoIssue[] {
       add("DUPLICATE_MEDIAL", index - 1, 2, "The same medial consonant sign is repeated in one syllable.");
     }
 
+    if (current === asat && previous === asat) {
+      add("DOUBLE_ASAT", index - 1, 2, "Two asat signs appear in a row.");
+    }
+
     if (medial.test(current) && vowel.test(previous ?? "")) {
       add("MEDIAL_AFTER_VOWEL", index, 1, "A medial consonant sign appears after a vowel mark; medials should precede vowels.");
+    }
+
+    if (current === asat && combining.test(chars[index + 1] ?? "") && chars[index + 1] !== virama && chars[index + 1] !== asat && chars[index + 1] !== visarga) {
+      add("MISPLACED_ASAT", index, 1, "The asat sign must be the final combining mark in its syllable.");
     }
   }
 

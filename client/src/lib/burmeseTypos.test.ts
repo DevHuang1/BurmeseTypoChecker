@@ -44,4 +44,36 @@ describe("detectBurmeseSyllableTypos", () => {
     const issues = detectBurmeseSyllableTypos("draft: \u1000\u102D\u102D");
     expect(issues).toMatchObject([{ code: "DUPLICATE_VOWEL_MARK", index: 8 }]);
   });
+
+  it("detects two consecutive asat signs", () => {
+    const issues = detectBurmeseSyllableTypos("\u1000\u103A\u103A");
+    expect(issues).toMatchObject([{ code: "DOUBLE_ASAT", index: 1, length: 2 }]);
+  });
+
+  it("detects an asat followed by another combining mark", () => {
+    expect(codes("\u1000\u103A\u102D")).toContain("MISPLACED_ASAT");
+  });
+
+  it("does not flag the asat inside a valid kinzi sequence", () => {
+    expect(codes("\u1004\u103A\u1039\u1000")).not.toContain("MISPLACED_ASAT");
+  });
+
+  it("detects a stacking virama at the end of the text", () => {
+    const issues = detectBurmeseSyllableTypos("\u1000\u1039");
+    expect(issues).toMatchObject([{ code: "UNSTACKED_VIRAMA", index: 1, length: 1 }]);
+  });
+
+  it("detects a stacking virama followed by a vowel", () => {
+    const issues = detectBurmeseSyllableTypos("\u1000\u1039\u102D");
+    expect(issues).toMatchObject([{ code: "UNSTACKED_VIRAMA", index: 1, length: 1 }]);
+  });
+
+  it("keeps valid stacked consonants and kinzi sequences free of UNSTACKED_VIRAMA", () => {
+    expect(codes("\u1000\u1039\u1000")).not.toContain("UNSTACKED_VIRAMA");
+    expect(codes("\u1004\u103A\u1039\u1000")).not.toContain("UNSTACKED_VIRAMA");
+  });
+
+  it("does not flag UNSTACKED_VIRAMA on a misplaced virama followed by a consonant", () => {
+    expect(codes("\u102D\u1039\u1000")).not.toContain("UNSTACKED_VIRAMA");
+  });
 });
